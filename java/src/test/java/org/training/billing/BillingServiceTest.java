@@ -1,5 +1,6 @@
 package org.training.billing;
 
+import com.casadepapel.billing.BrandNewBillingSystem;
 import com.ecorp.billing.GoodOldBillingSystem;
 import org.junit.jupiter.api.Test;
 
@@ -19,5 +20,18 @@ public class BillingServiceTest {
 
         // Then
         verify(billingSystem).invoice("100$ to Vance Refrigeration");
+    }
+
+    @Test
+    void send_invoice_to_new_billing_system() {
+        // Given
+        BrandNewBillingSystem billingSystem = mock(BrandNewBillingSystem.class);
+        BillingService billingService = new BillingService(new BrandNewBillingSystemAdapter(billingSystem));
+
+        // When
+        billingService.invoice(new Invoice(100, Currency.DOLLAR, "Vance Refrigeration"));
+
+        // Then
+        verify(billingSystem).invoice(100,  "$", "Vance Refrigeration");
     }
 }
